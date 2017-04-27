@@ -1,3 +1,9 @@
+# Mac
+*.DS_Store
+
+# Vim
+*.swp
+
 # Compiled Object files
 *.slo
 *.lo
