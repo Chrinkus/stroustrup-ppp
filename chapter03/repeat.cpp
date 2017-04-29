@@ -6,8 +6,10 @@ int main()
     string previous = " ";
     string current;
     while (cin>>current) {
+        ++number_of_words;
         if (previous == current)
-            cout << "repeated word: " << current << '\n';
+            cout << "word number " << number_of_words
+                 << "repeated word: " << current << '\n';
         previous = current;
     }
 }
