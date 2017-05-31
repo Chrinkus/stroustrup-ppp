@@ -15,6 +15,7 @@ try {
 
         for (int val; guess.size() < 4; ) {
             cin >> val;
+            if (!cin) error("Couldn't read integer from input\n");
             guess.push_back(val);
         }
 
