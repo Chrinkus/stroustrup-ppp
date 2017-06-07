@@ -18,7 +18,7 @@ public:
 };
 
 //------------------------------------------------------------------------------
-
+/*
 Token get_token()    // read a token from cin
 {
     char ch;
@@ -42,7 +42,7 @@ Token get_token()    // read a token from cin
         error("Bad token");
     }
 }
-
+*/
 //------------------------------------------------------------------------------
 
 class Token_stream {

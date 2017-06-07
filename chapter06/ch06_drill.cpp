@@ -74,8 +74,8 @@ Token Token_stream::get()       // ERROR 2 no ref to Token_stream
     cin >> ch;    // note that >> skips whitespace (space, newline, tab, etc.)
 
     switch (ch) {
-    case ';':    // for "print"
-    case 'q':    // for "quit"
+    case '=':    // for "print"
+    case 'x':    // for "quit"
     case '(': case ')': case '+': case '-': case '*': case '/': 
         return Token(ch);        // let each character represent itself
     case '.':
@@ -155,7 +155,7 @@ double term()
 // deal with + and -
 double expression()
 {
-    double left = term(;      // read and evaluate a Term
+    double left = term();      // read and evaluate a Term
     Token t = ts.get();        // get the next token from token stream
 
     while(true) {    
@@ -165,7 +165,7 @@ double expression()
             t = ts.get();
             break;
         case '-':
-            left += term();    // evaluate Term and subtract
+            left -= term();    // evaluate Term and subtract ERROR
             t = ts.get();
             break;
         default: 
@@ -180,15 +180,13 @@ double expression()
 int main()
 try
 {
-    while (cin) {
-        Token t = ts.get();
+    cout << "Welcome to our simple calculator.\n"
+         << "Please enter expressions using floating-point numbers.\n"
+         << "You may add, subtract, multiply and divide.\n"
+         << "End your expression with an '=' to print, press 'x' to quit.\n";
 
-        if (t.kind == 'q') break; // 'q' for quit
-        if (t.kind == ';')        // ';' for "print now"
-            cout << "=" << val << '\n';
-        else
-            ts.putback(t);
-        double val = expression(); // ERROR un-init'd val
+    while (cin) {
+        cout << "=" << expression() << '\n';
     }
 	keep_window_open();
 }
