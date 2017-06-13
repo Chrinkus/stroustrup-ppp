@@ -195,6 +195,8 @@ double primary()     // read and evaluate a Primary
         }
     case number:            // we use '8' to represent a number
         return t.value;  // return the number's value
+    case name:
+        return get_value(t.name);
     case '-':
         return -primary();
     case '+':

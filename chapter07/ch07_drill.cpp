@@ -14,6 +14,8 @@ struct Token {
 	string name;
 	Token(char ch) :kind(ch), value(0) { }
 	Token(char ch, double val) :kind(ch), value(val) { }
+    // Compiler error
+    Token(char ch, string s) :kind(ch), name(s) { }
 };
 
 class Token_stream {
@@ -40,6 +42,7 @@ Token Token_stream::get()
 	char ch;
 	cin >> ch;
 	switch (ch) {
+    case quit:
 	case '(':
 	case ')':
 	case '+':
@@ -61,7 +64,7 @@ Token Token_stream::get()
 	case '7':
 	case '8':
 	case '9':
-	{	cin.unget();
+	{	cin.putback(ch);
 		double val;
 		cin >> val;
 		return Token(number,val);
@@ -70,8 +73,8 @@ Token Token_stream::get()
 		if (isalpha(ch)) {
 			string s;
 			s += ch;
-			while(cin.get(ch) && (isalpha(ch) || isdigit(ch))) s=ch;
-			cin.unget();
+			while(cin.get(ch) && (isalpha(ch) || isdigit(ch))) s += ch;
+			cin.putback(ch);
 			if (s == "let") return Token(let);	
 			if (s == "quit") return Token(name);
 			return Token(name,s);
@@ -110,7 +113,7 @@ double get_value(string s)
 
 void set_value(string s, double d)
 {
-	for (int i = 0; i<=names.size(); ++i)
+	for (int i = 0; i<names.size(); ++i)
 		if (names[i].name == s) {
 			names[i].value = d;
 			return;
@@ -136,7 +139,8 @@ double primary()
 	case '(':
 	{	double d = expression();
 		t = ts.get();
-		if (t.kind != ')') error("'(' expected");
+		if (t.kind != ')') error("')' expected");
+        return d;
 	}
 	case '-':
 		return - primary();
@@ -193,11 +197,14 @@ double expression()
 double declaration()
 {
 	Token t = ts.get();
-	if (t.kind != 'a') error ("name expected in declaration");
+	if (t.kind != name) error ("name expected in declaration");
 	string name = t.name;
+
 	if (is_declared(name)) error(name, " declared twice");
+
 	Token t2 = ts.get();
 	if (t2.kind != '=') error("= missing in declaration of " ,name);
+
 	double d = expression();
 	names.push_back(Variable(name,d));
 	return d;
@@ -225,6 +232,10 @@ const string result = "= ";
 
 void calculate()
 {
+    names.push_back(Variable("pi", 3.14159));
+    names.push_back(Variable("e", 2.718281828));
+    names.push_back(Variable("k", 1000));
+
 	while(true) try {
 		cout << prompt;
 		Token t = ts.get();
