@@ -5,16 +5,56 @@
 
 	We have inserted 3 bugs that the compiler will catch and 3 that it won't.
 */
+/* GRAMMAR
+ * =======
+ * Calculation:
+ *      Statement
+ *      Print
+ *      Quit
+ *      Calculation Statement
+ *
+ * Statement:
+ *      Declaration
+ *      Expression
+ * 
+ * Declaration:
+ *      "let" Name "=" Expression
+ *
+ * Expression:
+ *      Term
+ *      Expression + Term
+ *      Expression - Term
+ *
+ * Term:
+ *      Secondary
+ *      Term * Secondary
+ *      Term / Secondary
+ *      Term % Secondary
+ *
+ * Secondary:
+ *      Primary
+ *      Secondary ^ Primary
+ *
+ * Primary:
+ *      Number
+ *      ( Expression )
+ *      - Primary
+ *      ? Primary
+ *      Primary ^ Primary
+ *
+ * Number:
+ *      floating-point-literal
+ */
 
 #include "../text_lib/std_lib_facilities.h"
 
 struct Token {
+    // All Tokens have a 'kind', value and name are optional
 	char kind;
 	double value;
 	string name;
 	Token(char ch) :kind(ch), value(0) { }
 	Token(char ch, double val) :kind(ch), value(val) { }
-    // Compiler error
     Token(char ch, string s) :kind(ch), name(s) { }
 };
 
@@ -22,6 +62,7 @@ class Token_stream {
 	bool full;
 	Token buffer;
 public:
+    // Constructor
 	Token_stream() :full(0), buffer(0) { }
 
 	Token get();
@@ -35,14 +76,21 @@ const char quit = 'Q';
 const char print = ';';
 const char number = '8';
 const char name = 'a';
+const char square_root = '?';
+const char exponent = '^';
 
 Token Token_stream::get()
 {
+    // Check buffer first
 	if (full) { full=false; return buffer; }
+
+    // Otherwise process next Token
 	char ch;
 	cin >> ch;
 	switch (ch) {
     case quit:
+    case square_root:
+    case exponent:
 	case '(':
 	case ')':
 	case '+':
@@ -64,19 +112,23 @@ Token Token_stream::get()
 	case '7':
 	case '8':
 	case '9':
-	{	cin.putback(ch);
+	{	
+        // if digit, back up & take whole number
+        cin.putback(ch);
 		double val;
 		cin >> val;
 		return Token(number,val);
 	}
 	default:
 		if (isalpha(ch)) {
+            // same thing if Token is unregistered, we want to accumulate
+            // alpha chars and digits into variable name
 			string s;
 			s += ch;
 			while(cin.get(ch) && (isalpha(ch) || isdigit(ch))) s += ch;
 			cin.putback(ch);
-			if (s == "let") return Token(let);	
-			if (s == "quit") return Token(name);
+			if (s == "let") return Token(let);
+			//if (s == "quit") return Token(name);
 			return Token(name,s);
 		}
 		error("Bad token");
@@ -84,6 +136,7 @@ Token Token_stream::get()
 }
 
 void Token_stream::ignore(char c)
+    // ignore all tokens up to first instance of 'c'
 {
 	if (full && c==buffer.kind) {
 		full = false;
@@ -97,34 +150,38 @@ void Token_stream::ignore(char c)
 }
 
 struct Variable {
+    // Every variable has a name and a value
 	string name;
 	double value;
 	Variable(string n, double v) :name(n), value(v) { }
 };
 
-vector<Variable> names;	
+vector<Variable> var_names;	
 
 double get_value(string s)
+    // retrieves a variable value from variable vector
 {
-	for (int i = 0; i<names.size(); ++i)
-		if (names[i].name == s) return names[i].value;
+	for (int i = 0; i<var_names.size(); ++i)
+		if (var_names[i].name == s) return var_names[i].value;
 	error("get: undefined name ",s);
 }
 
 void set_value(string s, double d)
+    // changes the value of an existing variable
 {
-	for (int i = 0; i<names.size(); ++i)
-		if (names[i].name == s) {
-			names[i].value = d;
+	for (int i = 0; i<var_names.size(); ++i)
+		if (var_names[i].name == s) {
+			var_names[i].value = d;
 			return;
 		}
 	error("set: undefined name ",s);
 }
 
 bool is_declared(string s)
+    // checks to see if a given variable name has already been declared
 {
-	for (int i = 0; i<names.size(); ++i)
-		if (names[i].name == s) return true;
+	for (int i = 0; i<var_names.size(); ++i)
+		if (var_names[i].name == s) return true;
 	return false;
 }
 
@@ -148,22 +205,63 @@ double primary()
 		return t.value;
 	case name:
 		return get_value(t.name);
+    case square_root:
+        {
+            double d = primary();
+            if (d < 0) error("Can't sqrt() Imaginary #");
+            return sqrt(d);
+        }
 	default:
 		error("primary expected");
 	}
 }
 
+double pow(double base, double exp)
+{
+    int x = narrow_cast<int>(exp);
+
+    double n = 1;
+    double b;
+
+    if (exp < 0) {
+        b = 1 / base;
+        x *= -1;
+    } else
+        b = base;
+
+    for (int i = 0; i < x; ++i)
+        n *= b;
+
+    return n;
+}
+
+double secondary()
+{
+    double left = primary();
+    while(true) {
+        Token t = ts.get();
+        switch(t.kind) {
+            case '^':
+                return pow(left, primary());
+            default:
+                ts.unget(t);
+                return left;
+        }
+    }
+}
+
 double term()
 {
-	double left = primary();
+	double left = secondary();
 	while(true) {
 		Token t = ts.get();
 		switch(t.kind) {
 		case '*':
-			left *= primary();
+			left *= secondary();
 			break;
 		case '/':
-		{	double d = primary();
+		{	
+            double d = secondary();
 			if (d == 0) error("divide by zero");
 			left /= d;
 			break;
@@ -198,7 +296,7 @@ double declaration()
 {
 	Token t = ts.get();
 	if (t.kind != name) error ("name expected in declaration");
-	string name = t.name;
+	string name = t.name;           // name already defined in outer scope
 
 	if (is_declared(name)) error(name, " declared twice");
 
@@ -206,7 +304,7 @@ double declaration()
 	if (t2.kind != '=') error("= missing in declaration of " ,name);
 
 	double d = expression();
-	names.push_back(Variable(name,d));
+	var_names.push_back(Variable(name,d));
 	return d;
 }
 
@@ -232,9 +330,10 @@ const string result = "= ";
 
 void calculate()
 {
-    names.push_back(Variable("pi", 3.14159));
-    names.push_back(Variable("e", 2.718281828));
-    names.push_back(Variable("k", 1000));
+    // This iteration lacks a define_var function
+    var_names.push_back(Variable("pi", 3.14159));
+    var_names.push_back(Variable("e", 2.718281828));
+    var_names.push_back(Variable("k", 1000));
 
 	while(true) try {
 		cout << prompt;
@@ -268,3 +367,19 @@ int main()
 		while (cin>>c && c!=';');
 		return 2;
 	}
+
+/* TESTING
+ *
+ * 1+2;
+ * 5-4; 3+2; 6-10;
+ * 1 / (3 + 8) * 10;
+ * let x = 5;
+ * let x2 = 16 / 4;
+ * x * x2 * pi;
+ *
+ * 1**2;
+ * 2+8
+ * let f@tnum = 10;
+ * x / y;
+ * xx - 500;
+ */
