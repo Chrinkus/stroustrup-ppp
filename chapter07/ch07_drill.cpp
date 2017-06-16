@@ -71,7 +71,7 @@ public:
 	void ignore(char);
 };
 
-const char let = 'L';
+const char let = '#';
 const char quit = 'Q';
 const char print = ';';
 const char number = '8';
@@ -91,6 +91,7 @@ Token Token_stream::get()
     case quit:
     case square_root:
     case exponent:
+    case let:
 	case '(':
 	case ')':
 	case '+':
@@ -127,8 +128,8 @@ Token Token_stream::get()
 			s += ch;
 			while(cin.get(ch) && (isalpha(ch) || isdigit(ch))) s += ch;
 			cin.putback(ch);
-			if (s == "let") return Token(let);
-			//if (s == "quit") return Token(name);
+			//if (s == "let") return Token(let);
+			if (s == "exit") return Token(quit);
 			return Token(name,s);
 		}
 		error("Bad token");
