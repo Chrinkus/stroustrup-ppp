@@ -147,10 +147,19 @@ catch(...) {
 }
 */
 
-/* 9.7.1
+// 9.7.1
 enum class Month {
     jan=1, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec
 };
+
+vector<string> month_tbl = { "January", "February", "March", "April",
+                             "May", "June", "July", "August", "September",
+                             "October", "November", "December" };
+
+ostream& operator<<(ostream& os, Month m)
+{
+    return os << month_tbl[int(m)];
+}
 
 class Date {
     int y;
@@ -179,7 +188,7 @@ void Date::add_day(int n)
 ostream& operator<<(ostream& os, const Date& d)
 {
     return os << '(' << d.year()
-              //<< ',' << d.month()
+              << ',' << d.month()
               << ',' << d.day() << ')';
 }
 
@@ -202,6 +211,3 @@ catch(...) {
     cerr << "unknown error" << '\n';
     return 2;
 }
-*/
-
-// 9.7.4
