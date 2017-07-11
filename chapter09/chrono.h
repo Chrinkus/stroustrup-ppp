@@ -1,8 +1,12 @@
+#include "../text_lib/std_lib_facilities.h"
+
 namespace Chrono {
 
     enum class Month {
-        jan=1, feb, mar, apr, may, jun, aug, sep, oct, nov, dec
+        jan=1, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec
     };
+
+    ostream& operator<<(ostream& os, const Month m);
 
     class Date {
         public:
@@ -35,6 +39,10 @@ namespace Chrono {
 
     ostream& operator<<(ostream& os, const Date& d);
     istream& operator>>(istream& is, Date& dd);
+
+    enum class Day {
+        sunday, monday, tuesday, wednesday, thursday, friday, saturday
+    };
 
     Day day_of_week(const Date& d);     // day of week of d
     Date next_Sunday(const Date& d);    // next Sunday after d

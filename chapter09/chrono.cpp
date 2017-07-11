@@ -1,6 +1,16 @@
-#include "Chrono.h"
+#include "chrono.h"
 
 namespace Chrono {
+
+    ostream& operator<<(ostream& os, const Month m)
+    {
+        vector<string> month_tbl = {
+            "", "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        };
+
+        return os << month_tbl[int(m)];
+    }
 
     Date::Date(int yy, Month mm, int dd)
         : y{yy}, m{mm}, d{dd}
@@ -34,7 +44,7 @@ namespace Chrono {
     void Date::add_year(int n)
     {
         if (m==Month::feb && d==29 && !leapyear(y+n)) {
-            m == Month::mar;
+            m = Month::mar;
             d = 1;
         }
         y += n;
@@ -54,7 +64,10 @@ namespace Chrono {
             case Month::feb:
                 days_in_month = (leapyear(y)) ? 29 : 28;
                 break;
-            case Month::apr: case Month::jun case Month::sep case Month::nov:
+            case Month::apr:
+            case Month::jun:
+            case Month::sep:
+            case Month::nov:
                 days_in_month = 30;
                 break;
         }
@@ -83,10 +96,10 @@ namespace Chrono {
 
     ostream& operator<<(ostream& os, const Date& d)
     {
-        return os << '(' << d.year()
-                  << ',' << d.month()
-                  << ',' << d.day()
-                  << ')';
+        return os << "(" << d.year()
+                  << ", " << d.month()
+                  << ", " << d.day()
+                  << ")";
     }
 
     istream& operator>>(istream& is, Date& dd)
@@ -104,10 +117,6 @@ namespace Chrono {
 
         return is;
     }
-
-    enum class Day {
-        sunday, monday, tuesday, wednesday, thursday, friday, saturday
-    };
 
     Day day_of_week(const Date& d)
     {
