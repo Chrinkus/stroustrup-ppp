@@ -20,32 +20,68 @@ ostream& operator<<(ostream& os, ISBN I)
               << I.chk;
 }
 
+bool operator==(const ISBN& a, const ISBN& b)
+{
+    return a.val1 == b.val1
+        && a.val2 == b.val2
+        && a.val3 == b.val3
+        && a.chk == b.chk;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+enum class Genre {
+    fiction, nonfiction, periodical, biography, children
+};
+
+ostream& operator<<(ostream& os, const Genre g)
+{
+
+    switch (Genre(g)) {
+        case fiction:
+            return os << "fiction";
+        case nonfiction:
+            return os << "nonfiction";
+        case periodical:
+            return os << "periodical";
+        case biography:
+            return os << "biography";
+        case children:
+            return os << "children";
+        default:
+            return os << "unknown";
+    }
+    //return os << int(g) << '\n';
+}
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 class Book {
     public:
-        Book(string t, string a, int c, ISBN I);
+        Book(string t, string a, int c, ISBN I, Genre g);
+        bool is_avail();
         void check_in();
         void check_out();
 
         // getters
-        string get_title() const { return title; }
-        string get_author() const { return author; }
-        int get_copy() const { return copyright; }
-        ISBN get_ISBN() const { return isbn; }
-        bool get_avail() const { return available; }
+        string  get_title()     const { return title; }
+        string  get_author()    const { return author; }
+        int     get_copy()      const { return copyright; }
+        ISBN    get_ISBN()      const { return isbn; }
+        Genre   get_genre()     const { return genre; }
     private:
         string title;
         string author;
         int copyright;
         ISBN isbn;
         bool available;
+        Genre genre;
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-Book::Book(string t, string a, int c, ISBN I)
-     :title{t}, author{a}, copyright{c}, isbn{I}
+Book::Book(string t, string a, int c, ISBN I, Genre g)
+     :title{t}, author{a}, copyright{c}, isbn{I}, genre {g}
 {
     // Set availability
     available = true;
@@ -61,12 +97,27 @@ void Book::check_out()
     available = false;
 }
 
-ostream& operator<<(ostream& os, Book b)
+bool Book::is_avail()
+{
+    return available;
+}
+
+ostream& operator<<(ostream& os, const Book b)
 {
     return os << b.get_title() << '\n'
               << "  " << b.get_author() << '\n'
-              << "  " << "Copyright " << b.get_copy() << '\n'
+              << "  " << b.get_genre() << '\n'
               << "  " << b.get_ISBN() << '\n';
+}
+
+bool operator==(const Book& a, const Book& b)
+{
+    return a.get_ISBN() == b.get_ISBN();
+}
+
+bool operator!=(const Book& a, const Book& b)
+{
+    return !(a == b);
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -76,15 +127,37 @@ try {
     // Program
     vector<Book> lib = {
         Book{"Eloquent Javascript", "Marijn Haverbeke", 2011,
-            ISBN{1, 59327, 282, '0'}},
+            ISBN{1, 59327, 282, '0'}, Genre::nonfiction},
         Book{"JavaScript: The Good Parts", "Douglas Crockford", 2008, 
-            ISBN{0, 596, 51774, '2'}},
-        Book{"Programming Principles and Practice Using C++",
-            "Bjarne Stroustrup", 2014, ISBN{0, 321, 99278, '4'}}
+            ISBN{0, 596, 51774, '2'}, Genre::nonfiction}
     };
 
     for (Book b : lib)
         cout << b << '\n';
+
+    cout << "Are EJS and Good Parts the same book?\n";
+    cout << (lib[0] == lib[1] ? "YES" : "NO") << '\n';
+
+    Book ppp = Book{
+        "Programming Principles and Practice Using C++",
+        "Bjarne Stroustrup",
+        2014,
+        ISBN{0, 321, 99278, '4'},
+        Genre::nonfiction
+    };
+
+    Book ppp2 = ppp;
+
+    cout << "Is PPP available? " << '\n';
+    cout << (ppp.is_avail() ? "YES" : "NO") << '\n';
+
+    ppp.check_out();
+
+    cout << "Is PPP available? " << '\n';
+    cout << (ppp.is_avail() ? "YES" : "NO") << '\n';
+
+    cout << "Is there another copy available? " << '\n';
+    cout << (ppp2 == ppp && ppp2.is_avail() ? "YES" : "NO") << '\n';
 }
 catch(exception& e) {
     cerr << e.what() << '\n';
