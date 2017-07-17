@@ -28,6 +28,11 @@ bool operator==(const ISBN& a, const ISBN& b)
         && a.chk == b.chk;
 }
 
+bool operator!=(const ISBN& a, const ISBN& b)
+{
+    return !(a == b);
+}
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 enum class Genre {
@@ -36,22 +41,11 @@ enum class Genre {
 
 ostream& operator<<(ostream& os, const Genre g)
 {
+    vector<string> genre_tbl = {
+        "fiction", "nonfiction", "periodical", "biography", "children"
+    };
 
-    switch (Genre(g)) {
-        case fiction:
-            return os << "fiction";
-        case nonfiction:
-            return os << "nonfiction";
-        case periodical:
-            return os << "periodical";
-        case biography:
-            return os << "biography";
-        case children:
-            return os << "children";
-        default:
-            return os << "unknown";
-    }
-    //return os << int(g) << '\n';
+    return os << genre_tbl[int(g)];
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -59,9 +53,9 @@ ostream& operator<<(ostream& os, const Genre g)
 class Book {
     public:
         Book(string t, string a, int c, ISBN I, Genre g);
-        bool is_avail();
-        void check_in();
-        void check_out();
+        bool is_avail() { return available; }
+        void check_in() { available = true; }
+        void check_out() { available = false; }
 
         // getters
         string  get_title()     const { return title; }
@@ -85,21 +79,6 @@ Book::Book(string t, string a, int c, ISBN I, Genre g)
 {
     // Set availability
     available = true;
-}
-
-void Book::check_in()
-{
-    available = true;
-}
-
-void Book::check_out()
-{
-    available = false;
-}
-
-bool Book::is_avail()
-{
-    return available;
 }
 
 ostream& operator<<(ostream& os, const Book b)
@@ -148,16 +127,19 @@ try {
 
     Book ppp2 = ppp;
 
-    cout << "Is PPP available? " << '\n';
+    cout << "Is PPP available?\n";
     cout << (ppp.is_avail() ? "YES" : "NO") << '\n';
 
     ppp.check_out();
 
-    cout << "Is PPP available? " << '\n';
+    cout << "Is PPP available?\n";
     cout << (ppp.is_avail() ? "YES" : "NO") << '\n';
 
-    cout << "Is there another copy available? " << '\n';
+    cout << "Is there another copy available?\n";
     cout << (ppp2 == ppp && ppp2.is_avail() ? "YES" : "NO") << '\n';
+
+    cout << "What genre is PPP?\n";
+    cout << ppp.get_genre() << '\n';
 }
 catch(exception& e) {
     cerr << e.what() << '\n';

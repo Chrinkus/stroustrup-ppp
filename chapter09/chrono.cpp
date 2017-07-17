@@ -20,7 +20,7 @@ namespace Chrono {
 
     const Date& default_date()
     {
-        static Date dd {2001, Month::jan, 1};       // start of 21st century
+        static const Date dd{2001, Month::jan, 1}; // start of 21st century
         return dd;
     }
 
@@ -61,14 +61,22 @@ namespace Chrono {
         int days_in_month = 31;     // set default days to 31
 
         switch(m) {
+            // handle feb
             case Month::feb:
                 days_in_month = (leapyear(y)) ? 29 : 28;
                 break;
+            // handle 30 day months
             case Month::apr:
             case Month::jun:
             case Month::sep:
             case Month::nov:
                 days_in_month = 30;
+                break;
+            // do nothing for 31 day months
+            case Month::jan:    case Month::mar:    case Month::may:
+            case Month::jul:    case Month::aug:    case Month::oct:
+            case Month::dec:
+            default:
                 break;
         }
 
@@ -80,6 +88,7 @@ namespace Chrono {
     bool leapyear(int y)
     {
         // Exercise 10
+        return false;
     }
 
     bool operator==(const Date& a, const Date& b)
@@ -109,7 +118,7 @@ namespace Chrono {
         is >> ch1 >> y >> ch2 >> m >> ch3 >> d >> ch4;
         if (!is) return is;
         if (ch1 != '(' || ch2 != ',' || ch3 != ',' || ch4 != ')') {
-            is.clear(ios_base::failbit);                // set the fail bit
+            is.clear(std::ios_base::failbit);                // set the fail bit
             return is;
         }
 
@@ -118,6 +127,7 @@ namespace Chrono {
         return is;
     }
 
+    /*
     Day day_of_week(const Date& d)
     {
         // ...
@@ -132,4 +142,5 @@ namespace Chrono {
     {
         // ...
     }
+    */
 }   // Chrono
