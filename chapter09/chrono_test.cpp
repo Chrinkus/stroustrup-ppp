@@ -14,7 +14,14 @@ using std::cout;
 
 int main()
 {
+    // Basic functionality
     Date d{2017, Month::jul, 17};
 
     cout << d << '\n';
+
+    // Exercise 10 - leapyear
+    Date l{2016, Month::feb, 27};
+
+    cout << "Was " << d << " a leapyear?: " << leapyear(d.year()) << '\n';
+    cout << "Was " << l << " a leapyear?: " << leapyear(l.year()) << '\n';
 }

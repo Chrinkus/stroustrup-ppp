@@ -88,7 +88,10 @@ namespace Chrono {
     bool leapyear(int y)
     {
         // Exercise 10
-        return false;
+        if (y % 4)
+            return false;
+        else
+            return true;
     }
 
     bool operator==(const Date& a, const Date& b)

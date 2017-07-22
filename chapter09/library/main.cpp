@@ -31,9 +31,16 @@ try{
     Patron jacob = lib.add_patron("Jacob");
     Patron caitlin = lib.add_patron("Caitlin");
 
+    cout << good_parts.is_avail() << '\n';
+    cout << chris.get_fees() << '\n';
+
     lib.check_out_book(good_parts, chris,
             Chrono::Date{2017, Chrono::Month::jul, 15});
+    cout << good_parts.is_avail() << '\n';
+
     lib.return_book(good_parts, chris, false);
+    cout << good_parts.is_avail() << '\n';
+    cout << chris.get_fees() << '\n';
 
     vector<Patron> outstanding = lib.get_fee_list();
     for (Patron o : outstanding)
