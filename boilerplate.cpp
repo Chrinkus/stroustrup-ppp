@@ -1,16 +1,35 @@
-#include "../text_lib/std_lib_facilities.h"
+#include "./GUI/Simple_window.h"
+#include "./GUI/Graph.h"
+
+#include <string>
+#include <iostream>
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+#include <stdexcept>
+
+void error(string s)
+{
+    throw runtime_error(s);
+}
+
+void error(string s1, string s2)
+{
+    throw runtime_error(s1 + s2);
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+
+using namespace Graph_lib;
 
 int main()
 try {
-    // Program
-    
-    return 0;
+    // program
 }
 catch(exception& e) {
-    cerr << "error: " << e.what() << '\n';
+    cerr << "exception: " << e.what() << '\n';
     return 1;
 }
 catch(...) {
-    cerr << "Unknown exception!\n";
+    cerr << "error\n";
     return 2;
 }

@@ -4,6 +4,10 @@
 # Vim
 *.swp
 
+# Libraries
+GUI
+FLTK
+
 # Compiled Object files
 *.slo
 *.lo
