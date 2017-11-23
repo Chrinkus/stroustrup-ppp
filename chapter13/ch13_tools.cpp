@@ -1,4 +1,5 @@
 #include "./ch13_tools.h"
+#include <iostream>
 
 using namespace Graph_lib;
 
@@ -137,12 +138,136 @@ Point center (Rectangle& r)
     return Point{x, y};
 }
 
-// Ex 5 - Connection Points: Circle & Ellipse
+// Ex 5 - Connection Points: Circle 
+
+Point n (Circle& c)
+{
+    int x = c.center().x + cos(90*PI/180) * c.radius();
+    int y = c.center().y - sin(90*PI/180) * c.radius();
+    return Point{x, y};
+}
+
+Point s (Circle& c)
+{
+    int x = c.center().x + cos(270*PI/180) * c.radius();
+    int y = c.center().y - sin(270*PI/180) * c.radius();
+    return Point{x, y};
+}
+
+Point e (Circle& c)
+{
+    int x = c.center().x + cos(0*PI/180) * c.radius();
+    int y = c.center().y - sin(0*PI/180) * c.radius();
+    return Point{x, y};
+}
+
+Point w (Circle& c)
+{
+    int x = c.center().x + cos(180*PI/180) * c.radius();
+    int y = c.center().y - sin(180*PI/180) * c.radius();
+    return Point{x, y};
+}
+
+Point nw (Circle& c)
+{
+    int x = c.center().x + cos(135*PI/180) * c.radius();
+    int y = c.center().y - sin(135*PI/180) * c.radius();
+    return Point{x, y};
+}
+
+Point ne (Circle& c)
+{
+    int x = c.center().x + cos(45*PI/180) * c.radius();
+    int y = c.center().y - sin(45*PI/180) * c.radius();
+    return Point{x, y};
+}
+
+Point se (Circle& c)
+{
+    int x = c.center().x + cos(315*PI/180) * c.radius();
+    int y = c.center().y - sin(315*PI/180) * c.radius();
+    return Point{x, y};
+}
+
+Point sw (Circle& c)
+{
+    int x = c.center().x + cos(225*PI/180) * c.radius();
+    int y = c.center().y - sin(225*PI/180) * c.radius();
+    return Point{x, y};
+}
+
+Point center (Circle& c)
+{
+    return c.center();
+}
+
+// Ex 5 - Connection Points: Circle 
+
+Point n (Ellipse& e)
+{
+    int x = e.center().x;
+    int y = e.center().y - e.minor();
+    return Point{x, y};
+}
+
+Point s (Ellipse& e)
+{
+    int x = e.center().x;
+    int y = e.center().y + e.minor();
+    return Point{x, y};
+}
+
+Point e (Ellipse& e)
+{
+    int x = e.center().x + e.major();
+    int y = e.center().y;
+    return Point{x, y};
+}
+
+Point w (Ellipse& e)
+{
+    int x = e.center().x - e.major();
+    int y = e.center().y;
+    return Point{x, y};
+}
+
+Point nw (Ellipse& e)
+{
+    int slr = pow(e.minor(), 2) / (e.focus1().x - e.center().x);
+    std::cout << slr << '\n';
+    int x = e.focus2().x;
+    int y = e.focus2().y - slr;
+    return Point{x, y};
+}
+
+Point ne (Ellipse& e)
+{
+    int slr = pow(e.minor(), 2) / (e.focus1().x - e.center().x);
+    int x = e.focus1().x;
+    int y = e.focus1().y - slr;
+    return Point{x, y};
+}
+
+Point se (Ellipse& e)
+{
+    int slr = pow(e.minor(), 2) / (e.focus1().x - e.center().x);
+    int x = e.focus1().x;
+    int y = e.focus1().y + slr;
+    return Point{x, y};
+}
+
+Point sw (Ellipse& e)
+{
+    int slr = pow(e.minor(), 2) / (e.focus1().x - e.center().x);
+    int x = e.focus2().x;
+    int y = e.focus2().y + slr;
+    return Point{x, y};
+}
 
 // Ex 6 - Text_box
 
 Text_box::Text_box(Point p, int ww, int hh, string ss)
-    : Rectangle(p, ww, hh), label (Point{p.x+5,p.y+20}, ss)
+    : Rectangle(p, ww, hh), label (Point{p.x+5,p.y+16}, ss)
 {
     add(p);
 }

@@ -1,5 +1,6 @@
 #include "../GUI/Graph.h"
 #include <string>
+#include <cmath>
 
 using namespace Graph_lib;
 
@@ -49,34 +50,36 @@ private:
 // Ex 4 - Connection Points: Rectangle
 
 Point n (Rectangle& r);
-
 Point s (Rectangle& r);
-
 Point e (Rectangle& r);
-
 Point w (Rectangle& r);
-
 Point nw (Rectangle& r);
-
 Point ne (Rectangle& r);
-
 Point sw (Rectangle& r);
-
 Point se (Rectangle& r);
-
 Point center (Rectangle& r);
 
 // Ex 5 - Connection Points: Circle & Ellipse
 
-Point n (Circle c);
-Point s (Circle c);
-Point e (Circle c);
-Point w (Circle c);
-Point ne (Circle c);
-Point se (Circle c);
-Point sw (Circle c);
-Point nw (Circle c);
-Point center (Circle c);
+Point n (Circle& c);
+Point s (Circle& c);
+Point e (Circle& c);
+Point w (Circle& c);
+Point ne (Circle& c);
+Point se (Circle& c);
+Point sw (Circle& c);
+Point nw (Circle& c);
+Point center (Circle& c);
+
+Point n (Ellipse& e);
+Point s (Ellipse& e);
+Point e (Ellipse& e);
+Point w (Ellipse& e);
+Point ne (Ellipse& e);
+Point se (Ellipse& e);
+Point sw (Ellipse& e);
+Point nw (Ellipse& e);
+Point center (Ellipse& e);
 
 // Ex 6 - Text_box
 

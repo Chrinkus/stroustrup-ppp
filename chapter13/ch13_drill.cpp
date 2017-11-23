@@ -27,6 +27,8 @@ try {
     for (int y = y_grid; y < y_size; y += y_grid)
         grid.add(Point{0, y}, Point{x_size, y});
 
+    grid.set_color(Color::red);
+
     win.attach(grid);
     win.wait_for_button();
 

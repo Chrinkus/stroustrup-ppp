@@ -1,0 +1,8 @@
+Mackenzie River 4241
+Yukon River 3185
+Saint Lawrence River 3058
+Nelson River 2575
+Slave River 2338
+Columbia River 2000
+Saskatchewan River 1939
+Peace River 1923
