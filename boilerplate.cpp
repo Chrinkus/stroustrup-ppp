@@ -1,35 +1,24 @@
-#include "./GUI/Simple_window.h"
-#include "./GUI/Graph.h"
+//
+// Stroustrup - Programming Principles & Practice
+//
+// Chapter XX Exercise XX
+//
 
-#include <string>
 #include <iostream>
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 #include <stdexcept>
 
-void error(string s)
-{
-    throw runtime_error(s);
-}
-
-void error(string s1, string s2)
-{
-    throw runtime_error(s1 + s2);
-}
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-
-using namespace Graph_lib;
+using namespace std;
 
 int main()
 try {
-    // program
+    // code
 }
 catch(exception& e) {
-    cerr << "exception: " << e.what() << '\n';
+    cerr << "Exception: " << e.what() << '\n';
     return 1;
 }
 catch(...) {
-    cerr << "error\n";
+    cerr << "Unknown exception\n";
     return 2;
 }
+

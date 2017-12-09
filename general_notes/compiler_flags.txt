@@ -1,0 +1,22 @@
+Compiler Flags/Settings
+=======================
+
+Graph_lib compiler command:
+
+g++                         :compiler (gcc.gnu.org)
+-w                          :inhibit all warning messages
+-Wall                       :all W-warnings options enabled
+-std=c++11                  :determines the language standard
+../GUI/Graph.cpp            :source file
+../GUI/Window.cpp           :source file
+../GUI/GUI.cpp              :source file
+../GUI/Simple_window.cpp    :source file
+ch15_tools.cpp              :source file
+ex09_can_rivers.cpp         :source file w/main()
+`fltk-config                :pkg-config for compiling libraries
+--ldflags
+--use-images`
+-o                          :place the output of compilation in following file
+a.out
+
+
