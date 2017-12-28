@@ -7,18 +7,16 @@
 #include <iostream>
 #include <stdexcept>
 
-using namespace std;
-
 int main()
 try {
     // code
 }
-catch(exception& e) {
-    cerr << "Exception: " << e.what() << '\n';
+catch(std::exception& e) {
+    std::cerr << "Exception: " << e.what() << '\n';
     return 1;
 }
 catch(...) {
-    cerr << "Unknown exception\n";
+    std::cerr << "Unknown exception\n";
     return 2;
 }
 
