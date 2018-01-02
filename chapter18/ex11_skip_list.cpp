@@ -5,12 +5,16 @@
 //
 // Implement a skip list
 //
-// Try to implement a regular linked list, add a head, attempt skips
-// NOT YET COMPLETE - as is, functions as a singly-linked list with a head and
-// sorted entry. To make this a skip list I need to find a way to change the 
-// forward pointer into an array of pointers based on level and have each level
-// point to the next element of that level. Also must somehow save back
-// pointers covering the same levels for previous forwarding (?)
+// Node and basic Skip_list implemented. Current list allows insertion of
+// integer type values, assigns a random level and places them into the list
+// in order.
+//
+// Print_list has been modified to selectively print the express lanes. Nodes
+// currently "know" their level for proofing though real skip list nodes do
+// not.
+//
+// Search and delete are next to be added, then a max level that grows as
+// elements are added to the list.
 
 #include <iostream>
 #include <stdexcept>
@@ -18,7 +22,9 @@
 #include <functional>       // std::bind
 #include <chrono>
 
-// global answer...
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+// Random level generator
+
 int seed = std::chrono::system_clock::now().time_since_epoch().count();
 std::default_random_engine generator(seed);
 std::bernoulli_distribution distribution(0.5);
@@ -26,7 +32,7 @@ auto coin_flip = std::bind(distribution, generator);
 
 int generate_prob(int max)
 {
-    int prob = 0;
+    int prob = 1;
     while (prob < max) {
         if (!coin_flip())
             break;
@@ -35,71 +41,103 @@ int generate_prob(int max)
     return prob;
 }
 
-class Node {
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+// Node data structure
+
+struct Node {
+    explicit Node(int levels)
+        : val{INT_MIN}, lvl{levels}, fwd{new Node*[levels]}
+    {
+        for (int i = 0; i < levels; ++i) fwd[i] = nullptr;
+    }
+
+    Node(int value, int levels, Node** forward)
+        : val{value}, lvl{levels}, fwd{new Node*[levels]}
+    {
+        for (int i = 0; i < levels; ++i) fwd[i] = forward[i];
+    }
+
+    ~Node() { delete fwd[0]; delete[] fwd; }
+
     int val;
     int lvl;
-public:
-    // no default constructor
-    Node(int n, int l, Node* fwd)
-        : val{n}, lvl{l}, forward{fwd} { }
-
-    ~Node() { delete forward; }
-
-    Node* forward;
-
-    int value() const { return val; }
-    int level() const { return lvl; }
+    Node** fwd;
+private:
+    Node(const Node&);              // prevent copying
+    Node& operator=(const Node&);
 };
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+// Skip list implementation
 
 class Skip_list {
     int sz;                     // needed for calculating lvls *future*
-    int lvls;                   // should grow with list, is set to 4 for this
-
+    int lvls;                   // should grow with list, is set by arg for now
+    Node* head;           
 public:
-    Skip_list();
+    explicit Skip_list(int levels)
+        : sz{0}, lvls{levels}, head{new Node(levels)} { }
 
     ~Skip_list() { delete head; }
 
-    Node* head;                 // pointer to first element
-
     void insert(int);
+    Node* front(int i = 0) const { return head->fwd[i]; }
 };
-
-Skip_list::Skip_list()
-    // levels is fixed for now as currently we aren't changing the size of
-    // arrays in this chapter.
-    : sz{0}, lvls{4}, head{new Node{INT_MIN, 4, nullptr}}
-{
-    // nothing yet
-}
 
 void Skip_list::insert(int n)
 {
-    // determine where in the list to insert
-    int level = generate_prob(lvls - 1);
-    Node* p = head;
-    while (p->forward != nullptr && p->forward->value() < n) {
-        p = p->forward;
+    // create temp Node* array to fill with values just lower than n
+    Node* update[lvls];
+    update[lvls-1] = head;
+
+    for (int i = lvls - 1; i >= 0; --i) {
+        
+        // compare values until find one greater or hit end of list at level
+        while (update[i]->fwd[i] != nullptr && update[i]->fwd[i]->val < n)
+            update[i] = update[i]->fwd[i];
+
+        update[i-1] = update[i];
+    }
+
+    // create new Node with empty forward array of random size
+    int levels = generate_prob(lvls);
+    Node* forward[levels];
+    Node* new_node = new Node{n, levels, forward};
+
+    // shuffle pointers to insert new_node
+    for (int i = 0; i < levels; ++i) {
+        if (head->fwd[i] == nullptr) {          // check if this level is empty
+            head->fwd[i] = new_node;
+            new_node->fwd[i] = nullptr;
+        }
+        else {
+            new_node->fwd[i] = update[i]->fwd[i];
+            update[i]->fwd[i] = new_node;       // prev's fwd is new_node
+        }
+
     }
     
-    // create Node for value n & pass max level to generate level
-    Node* pn = new Node{n, level, p->forward};
-    p->forward = pn;
+    // increase list size
     ++sz;
 }
 
-void print_skip_list(Skip_list& skl)
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+// Print function for proofing
+
+void print_skip_list(Skip_list& skip, int n = 0)
 {
-    Node* p = skl.head;
-    while (p->forward != nullptr) {
-        p = p->forward;
-        std::cout << p->value() << ' ' << p->level() << '\n';
+    Node* p = skip.front(n);
+    while (p != nullptr) {
+        std::cout << p->val << ' ' << p->lvl << '\n';
+        p = p->fwd[n];
     }
 }
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+
 int main()
 try {
-    Skip_list test;
+    Skip_list test(4);
 
     test.insert(37);
     test.insert(23);
@@ -117,7 +155,14 @@ try {
     test.insert(39);
     test.insert(62);
 
+    std::cout << "Level 1\n";
     print_skip_list(test);
+    std::cout << "Level 2\n";
+    print_skip_list(test, 1);
+    std::cout << "Level 3\n";
+    print_skip_list(test, 2);
+    std::cout << "Level 4\n";
+    print_skip_list(test, 3);
 }
 catch(std::exception& e) {
     std::cerr << "Exception: " << e.what() << '\n';

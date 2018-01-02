@@ -29,20 +29,15 @@ void f2(int a[], int n)
 }
 
 void f3(std::array<int, 10> ai)
+    // only works if array size is passed as it is a parameter of the type
+    // this is almost identical to f2 since both functions require the size to
+    // be passed
 {
     std::cout << "Function range-for std::array loop\n";
     for (auto& a : ai)
         std::cout << a << ' ';
     std::cout << '\n';
 }
-
-struct Node {
-    Node(int value, int level)
-        : val{value}, lvl{level} { }
-
-    int val;
-    int lvl;
-};
 
 int main()
 try {
@@ -82,19 +77,6 @@ try {
     std::cout << '\n';
 
     f3(ai2);
-
-    // pointer array test
-    Node* an[3];
-    Node* pn1 = new Node{10, 2};
-    Node* pn2 = new Node{20, 3};
-    Node* pn3 = new Node{30, 1};
-    an[0] = pn1;
-    an[1] = pn2;
-    an[2] = pn3;
-
-    std::cout << "Array of pointers test\n";
-    for (auto& a : an)
-        std::cout << a->val << ' ' << a->lvl << '\n';
 }
 catch(std::exception& e) {
     std::cerr << "Exception: " << e.what() << '\n';
