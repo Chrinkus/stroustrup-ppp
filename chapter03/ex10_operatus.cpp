@@ -1,5 +1,7 @@
 #include "../text_lib/std_lib_facilities.h"
 
+// LOOKING BACK: Not sure why I didn't use char's for the operators..
+
 int main()
 {
     // Program

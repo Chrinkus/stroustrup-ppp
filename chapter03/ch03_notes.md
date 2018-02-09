@@ -1,7 +1,7 @@
 # Programming Principles and Practice Using C++
-### Bjarne Stroustrup
 
 ## Chapter 3 - Objects, Types and Values
+
 1. Prompt means to ask the user for input.
 2. The `>>` or "get from" operator reads a value into a variable.
 3. After prompting the user for an integer value you can:

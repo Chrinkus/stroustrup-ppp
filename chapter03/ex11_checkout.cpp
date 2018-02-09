@@ -1,5 +1,8 @@
 #include "../text_lib/std_lib_facilities.h"
 
+// LOOKING BACK: This was straight out of my Java textbook in the semester of 
+// computer science I took.
+
 int main()
 {
     // Program

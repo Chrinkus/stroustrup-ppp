@@ -1,5 +1,8 @@
 #include "../text_lib/std_lib_facilities.h"
 
+// LOOKING BACK: I didn't really have much of an appetite for flexing the
+// compiler's error detection..
+
 int main()
 {
     int ridic = 0.273;      // only a warning!
