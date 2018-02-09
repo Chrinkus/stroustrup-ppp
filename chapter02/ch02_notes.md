@@ -1,9 +1,7 @@
 # Programming Principles and Practice Using C++
-### Bjarne Stroustrup
 
-The following are answers to the chapter review sections in the textbook
+## Chapter 2 - Hello, World!
 
-## Chapter 2 : Hello, World!
 1. The "Hello, World!" program is our introduction to any new language. It puts the syntax on our lips and the process into our hands.
 2. The four parts of a function are a return type, a name, a parameter list, and the function body.
 3. Every C++ program must contain a main() function.
