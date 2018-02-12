@@ -1,0 +1,10 @@
+monitor 58 199.99
+book 14 62.73
+table 4 287.74
+couch 2011 787.80
+cup 5 11.46
+bread 17 3.56
+water 2 11.98
+phone 6 500.32
+chair 15 298.73
+pan 83 73.44
