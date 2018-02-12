@@ -1,4 +1,4 @@
-#Programming Principles & Practice
+# Programming Principles & Practice
 
 ## Chapter 6 - Writing a Program
 
@@ -25,7 +25,7 @@
 20. We use 'kind' to read the type of Token we are dealing with. If that Token is a number the value is stored in the 'value' member. All Tokens have a 'kind' but only numbers (of kind '8') have a 'value'.
 21. Public interfaces are the convenient ways in which we can work with the type and private contains the implementation details that using the type does not require access to.
 22. If there is a token in the buffer when get() is called then the buffer token will be returned and the 'full' boolean will be reset to false.
-23. The ';' and 'q' cases were added to Token_stream::get to provide the user with the ability to explicitly print or quit.
+23. The ';' and 'q' cases were added to Token\_stream::get to provide the user with the ability to explicitly print or quit.
 24. We should be testing anytime we have a section of the program that may produce a result or computation.
 25. A "user defined type" is a class and we use it to flexibly add types when we require them.
 26. A class.
