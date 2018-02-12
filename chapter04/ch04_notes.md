@@ -1,6 +1,6 @@
 # Programming Principles & Practice
 
-## Chapter 4 Review
+## Chapter 4 - Computation
 
 1. A computation is the act of producing some outputs from some inputs.
 2. The output 49 can be produced from the input 7 and the computation square.
