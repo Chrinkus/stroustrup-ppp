@@ -5,6 +5,9 @@
 
 #include "../text_lib/std_lib_facilities.h"
 
+// ATTENTION: This initial attempt may not work as expected. The actual
+// solution to ex 2 is found in ch06_calculator.cpp.
+
 //------------------------------------------------------------------------------
 
 class Token {
@@ -73,7 +76,6 @@ Token Token_stream::get()
     switch (ch) {
         case ';':       // for "print"
         case 'q':       // for "quit"
-        case '!':
         case '(':
         case ')':
         case '{':
@@ -116,10 +118,6 @@ double expression();  // read and evaluate a Expression
 //------------------------------------------------------------------------------
 
 double term();        // read and evaluate a Term
-
-//------------------------------------------------------------------------------
-
-double secondary();
 
 //------------------------------------------------------------------------------
 
@@ -193,18 +191,18 @@ double expression()
 
 double term()
 {
-    double left = secondary();
+    double left = primary();
     Token t = ts.get();     // get the next token
 
     while(true) {
         switch (t.kind) {
         case '*':
-            left *= secondary();
+            left *= primary();
             t = ts.get();
             break;
         case '/':
             {    
-                double d = secondary();
+                double d = primary();
                 if (d == 0) error("divide by zero");
                 left /= d; 
                 t = ts.get();
@@ -218,45 +216,3 @@ double term()
 }
 
 //------------------------------------------------------------------------------
-
-double secondary()
-{
-    double left = primary();
-    Token t = ts.get();
-
-    while(true) {
-        if (t.kind == '!') {
-            if (left == 0)
-                return 1;
-
-            for (int i = left - 1; i > 0; --i)
-                left *= i;
-            t = ts.get();
-        } else {
-            ts.putback(t);
-            return left;
-        }
-    }
-}
-
-//------------------------------------------------------------------------------
-/*
-Grammar 
-=======
-Expression:
-    Term
-    Expression "+" Term
-    Expression "-" Term
-Term:
-    Secondary
-    Term "*" Secondary
-    Term "/" Secondary
-Secondary:
-    Primary
-    Number "!"
-Primary:
-    Number
-    "(" Expression ")"
-Number:
-    floating-point-literal
-*/
