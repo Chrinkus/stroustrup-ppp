@@ -1,5 +1,7 @@
 #include "../text_lib/std_lib_facilities.h"
 
+// QA OBSERVATION: std::inner_product!
+
 double get_index(const vector<double>& p, const vector<double>& w)
 {
     if (p.size() != w.size()) error("get_index: different sized vectors");

@@ -1,4 +1,4 @@
-#include "./my.h"
+#include "./ch08_drill_1_my.h"
 
 int main()
 {
