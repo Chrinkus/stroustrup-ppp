@@ -1,5 +1,7 @@
 #include "../text_lib/std_lib_facilities.h"
 
+// This pretty much is a redo of all of the try-this's from the chapter
+
 int main()
 try {
     int birth_year = 1979;

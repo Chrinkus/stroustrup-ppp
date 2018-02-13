@@ -1,5 +1,8 @@
 #include "../text_lib/std_lib_facilities.h"
 
+// This includes many of the 'Try This's from the chapter
+// The final 'try this' is in the chapter drill
+
 int main()
 try {
     // Integer output
