@@ -1,0 +1,79 @@
+Christie Crisp
+511 Honeydew Lane
+MasterCard 6543
+
+	1 Fire_Extinguisher 23.89
+
+Christmas Jones
+373 3rd Ave
+Cash
+
+	3 Multi_Coloured_Lights 24.99
+	1 Fake_Spruce_Tree 19.76
+
+Jeremiah Sledge
+407 Turnip Ave
+Visa 9876
+
+	1 14'_Fiberglass_Ladder 88.75
+	1 Rubber_Gloves 3.97
+
+John
+117 Crow's Nest Pass
+MasterCard 1231
+
+	1 1/2L_Oil 16.78
+
+Kim Shaunders
+1045 2nd St
+Visa 4321
+
+	3 Flamingos 4.98
+	1 Deluxe_BBQ 199.98
+
+Luigi Fastenzza
+28 Sycamore Rd
+Amex 4567
+
+	1 Pipe_Wrench 38.89
+	2 1-1/2"_Fittings 3.65
+	2 Gold_Buttons 14.77
+	1 Mustache_Comb 2.6
+	50 Zip_Ties 0.34
+
+Matthew Markus
+22 Mahonee Dr
+Amex 7654
+
+	1 1/2_G_White_Paint 23.66
+	1 1/2_G_Purple_Paint 21.5
+	1 1/2_G_Olive_Paint 21.5
+	1 Paint_Roller 2.67
+
+Rob Bothouse
+557 Omega Way
+Cash
+
+	4 9W_LED_Bulbs 9.87
+	2 13W_LED_Par_Bulbs 12.2
+	2 13W_LED_Par_Bulbs_Soft 12.2
+
+Sammy Swanson
+29 Aspen Dr
+MasterCard 5678
+
+	2 50x1_1/2_screws 6.87
+	1 Hammer 28.74
+	1 Leather_Gloves 8.99
+	1 Safety_Glasses 2.99
+	1 Knee_pads 5.47
+	1 Hard_hat 9.99
+
+Tom Patrick
+13 Chesterfield Way
+MasterCard 1234
+
+	1 Hacksaw 14.54
+	5 Rolls_of_Tape 1.35
+	1 Bag_of_Popcorn 0.99
+
