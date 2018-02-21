@@ -297,23 +297,23 @@ void print_manual()
 void calculate()
 {
     while (cin)
-    try {
-        cout << prompt;
-        Token t = ts.get();
-        if (t.kind == help) {
-            print_manual();
-            t = ts.get();
-            continue;
+        try {
+            cout << prompt;
+            Token t = ts.get();
+            if (t.kind == help) {
+                print_manual();
+                t = ts.get();
+                continue;
+            }
+            while (t.kind == print) t = ts.get();
+            if (t.kind == quit) return;
+            ts.putback(t);
+            cout << result << statement() << '\n';
         }
-        while (t.kind == print) t = ts.get();
-        if (t.kind == quit) return;
-        ts.putback(t);
-        cout << result << statement() << '\n';
-    }
-    catch (exception& e) {
-        cerr << e.what() << '\n';
-        clean_up_mess();
-    }
+        catch (exception& e) {
+            cerr << e.what() << '\n';
+            clean_up_mess();
+        }
 }
 
 //------------------------------------------------------------------------------
