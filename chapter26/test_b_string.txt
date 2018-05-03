@@ -1,0 +1,10 @@
+{ 1.1 Darwin { Bohr Darwin Einstein Lavoisier Newton Stroustrup Turing } 1 }
+{ 1.2 Lavoisier { Bohr Darwin Einstein Lavoisier Newton Stroustrup Turing } 1 }
+{ 1.3 Newton { Bohr Darwin Einstein Lavoisier Newton Stroustrup Turing } 1 }
+{ 1.4 Turing { Bohr Darwin Einstein Lavoisier Newton Stroustrup Turing } 1 }
+{ 1.5 Knuth { Bohr Darwin Einstein Lavoisier Newton Stroustrup Turing } 0 }
+{ 1.6 Meyers { Bohr Darwin Einstein Lavoisier Newton Stroustrup Turing } 0 }
+{ 2.1 Sutter { } 0 }
+{ 2.1 Einstein { } 0 }
+{ 3.1 Turing { Turing } 1 }
+{ 3.1 Newton { Turing } 0 }
