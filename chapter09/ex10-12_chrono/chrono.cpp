@@ -2,16 +2,36 @@
 
 namespace Chrono {
 
-    ostream& operator<<(ostream& os, const Month m)
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+// Month
+    Month operator++(Month& m)                  // prefix increment operator
     {
-        vector<string> month_tbl = {
-            "", "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
-        };
+        m = (m == Month::dec) ? Month::jan : Month(int(m) + 1); // wrap around
 
-        return os << month_tbl[int(m)];
+        return m;
     }
 
+    ostream& operator<<(ostream& os, const Month& m)
+    {
+        return os << Month_tbl[int(m)];
+    }
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+// Day
+    Day operator++(Day& d)
+    {
+        d = (d == Day::sat) ? Day::sun : Day(int(d) + 1);
+
+        return d;
+    }
+
+    ostream& operator<<(ostream& os, const Day& d)
+    {
+        return os << Day_tbl[int(d)];
+    }
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+// Date
     Date::Date(int yy, Month mm, int dd)
         : y{yy}, m{mm}, d{dd}
     {
@@ -32,20 +52,59 @@ namespace Chrono {
     }
 
     void Date::add_day(int n)
+        // n is positive
     {
-        // ...
+        n += d - 1;             // end of months are wonky, all months have 1st
+        d = 1;                  // set day to 1st and add offset to n
+
+        while (n > 0) {
+            int days = days_in_month(y, m);
+
+            if (n < days - d) {
+                d += n;
+                return;
+            }
+
+            n -= days;
+            add_month(1);
+        }
     }
 
     void Date::add_month(int n)
+        // handles negative n
+        // increase months and years if necessary
+        // if day is out of next month's range set day to next month's last day
     {
-        // ...
+        int months = int(m) + n;
+        int neg_adj = (months > 0) ? 0 : 1;         // negative adjustment
+
+        m = Month(months % 12 + neg_adj * 12);
+        add_year(int(months / 12) - neg_adj * 1);
+
+        if (d > 28) {               // only need to adjust days at end of month
+            switch (m) {
+                case Month::feb:
+                    d = leapyear(y) ? 29 : 28;
+                    break;
+                case Month::apr:
+                case Month::jun:
+                case Month::sep:
+                case Month::nov:
+                    if (d == 31)
+                        d = 30;
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     void Date::add_year(int n)
+        // handles negative n
+        // changed to maintain end of month consistency
     {
         if (m==Month::feb && d==29 && !leapyear(y+n)) {
-            m = Month::mar;
-            d = 1;
+            d = 28;
         }
         y += n;
     }
@@ -58,40 +117,40 @@ namespace Chrono {
         if (d <= 0) return false;
         if (m < Month::jan || Month::dec < m) return false;
 
-        int days_in_month = 31;     // set default days to 31
+        if (days_in_month(y, m) < d) return false;
 
-        switch(m) {
-            // handle feb
+        return true;
+    }
+
+    int days_in_month(int y, Month m)
+    {
+        switch (m) {
             case Month::feb:
-                days_in_month = (leapyear(y)) ? 29 : 28;
-                break;
-            // handle 30 day months
+                return (leapyear(y)) ? 29 : 28;
             case Month::apr:
             case Month::jun:
             case Month::sep:
             case Month::nov:
-                days_in_month = 30;
-                break;
-            // do nothing for 31 day months
-            case Month::jan:    case Month::mar:    case Month::may:
-            case Month::jul:    case Month::aug:    case Month::oct:
-            case Month::dec:
+                return 30;
             default:
-                break;
+                return 31;
         }
+    }
 
-        if (days_in_month < d) return false;
-
-        return true;
+    int days_in_month(const Date& d)
+    {
+        return days_in_month(d.year(), d.month());
     }
 
     bool leapyear(int y)
     {
         // Exercise 10
-        if (y % 4)
-            return false;
-        else
+        // Changed to make conditional test for leapyear return more of an
+        // intuitively "positive" result
+        if (y % 4 == 0)
             return true;
+        else
+            return false;
     }
 
     bool operator==(const Date& a, const Date& b)
@@ -121,7 +180,7 @@ namespace Chrono {
         is >> ch1 >> y >> ch2 >> m >> ch3 >> d >> ch4;
         if (!is) return is;
         if (ch1 != '(' || ch2 != ',' || ch3 != ',' || ch4 != ')') {
-            is.clear(std::ios_base::failbit);                // set the fail bit
+            is.clear(std::ios_base::failbit);           // set the fail bit
             return is;
         }
 
@@ -130,12 +189,32 @@ namespace Chrono {
         return is;
     }
 
-    /*
     Day day_of_week(const Date& d)
+        // formula found in article from Universtity of Waterloo
+        // https://cs.uwaterloo.ca/~alopez-o/math-faq/node73.html
     {
-        // ...
+        int k = d.day();
+        int m = int(d.month());
+        int y = d.year();
+
+        
+        if (m > 2) {
+            m -= 2;                 // adjust for month 1 = Mar
+        }
+        else {
+            m += 10;
+            --y;                    // Jan & Feb belong to previous year
+        }
+
+        int c = int(y / 100);       // the century portion
+        y %= 100;                   // y becomes just the 2 digit year
+
+        return Day(
+            (k + int(2.6*m - 0.2) - 2*c + y + int(y/4) + int(c/4)) % 7
+        );
     }
 
+    /*
     Date next_Sunday(const Date& d)
     {
         // ...
