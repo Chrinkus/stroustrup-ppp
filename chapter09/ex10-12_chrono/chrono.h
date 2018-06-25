@@ -70,15 +70,17 @@ namespace Chrono {
     int  days_in_month(int y, Month m);     // number of days in month
     int  days_in_month(const Date& d);      // overload
 
+    Day  day_of_week(const Date& d);        // day of week of d
+    Date day_one(const Date& d);            // first day of first week (Sunday)
+    int  week_of_year(const Date& d);
+
     bool operator==(const Date& a, const Date& b);
     bool operator!=(const Date& a, const Date& b);
+    bool operator<(const Date& a, const Date& b);
 
     ostream& operator<<(ostream& os, const Date& d);
     istream& operator>>(istream& is, Date& dd);
 
-    Day day_of_week(const Date& d);     // day of week of d
-    /*
-    Date next_Sunday(const Date& d);    // next Sunday after d
-    Date next_weekday(const Date& d);   // next weekday after d
-    */
+    Date next_sunday(Date d);               // next Sunday after d
+    Date next_weekday(Date d);              // next weekday after d
 }   // Chrono

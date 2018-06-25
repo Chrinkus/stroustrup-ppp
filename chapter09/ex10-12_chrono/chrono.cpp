@@ -30,6 +30,30 @@ namespace Chrono {
         return os << Day_tbl[int(d)];
     }
 
+    Day day_of_week(const Date& d)
+        // formula found in article from Universtity of Waterloo
+        // https://cs.uwaterloo.ca/~alopez-o/math-faq/node73.html
+    {
+        int k = d.day();
+        int m = int(d.month());
+        int y = d.year();
+        
+        if (m > 2) {
+            m -= 2;                 // adjust for month 1 = Mar
+        }
+        else {
+            m += 10;
+            --y;                    // Jan & Feb belong to previous year
+        }
+
+        int c = int(y / 100);       // the century portion
+        y %= 100;                   // y becomes just the 2 digit year
+
+        return Day(
+            (k + int(2.6*m - 0.2) - 2*c + y + int(y/4) + int(c/4)) % 7
+        );
+    }
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 // Date
     Date::Date(int yy, Month mm, int dd)
@@ -46,10 +70,8 @@ namespace Chrono {
 
     Date::Date()
         : y{default_date().year()},
-        m{default_date().month()},
-        d{default_date().day()}
-    {
-    }
+          m{default_date().month()},
+          d{default_date().day()} { }
 
     void Date::add_day(int n)
         // n is positive
@@ -57,7 +79,7 @@ namespace Chrono {
         n += d - 1;             // end of months are wonky, all months have 1st
         d = 1;                  // set day to 1st and add offset to n
 
-        while (n > 0) {
+        while (n > 0) {                         // positive n's
             int days = days_in_month(y, m);
 
             if (n < days - d) {
@@ -67,6 +89,16 @@ namespace Chrono {
 
             n -= days;
             add_month(1);
+        }
+
+        while (n < 0) {                         // negative n's
+            add_month(-1);
+            n += days_in_month(y, m);
+
+            if (n > 0) {
+                d += n;
+                return;
+            }
         }
     }
 
@@ -165,6 +197,19 @@ namespace Chrono {
         return !(a == b);
     }
 
+    bool operator<(const Date& a, const Date& b)
+    {
+        if (a.year() < b.year())
+            return true;
+        if (a.year() == b.year() && a.month() < b.month())
+            return true;
+        if (a.year() == b.year() && a.month() == b.month() &&
+                a.day() < b.day())
+            return true;
+
+        return false;
+    }
+
     ostream& operator<<(ostream& os, const Date& d)
     {
         return os << "(" << d.year()
@@ -189,40 +234,63 @@ namespace Chrono {
         return is;
     }
 
-    Day day_of_week(const Date& d)
-        // formula found in article from Universtity of Waterloo
-        // https://cs.uwaterloo.ca/~alopez-o/math-faq/node73.html
+    Date day_one(const Date& d)
     {
-        int k = d.day();
-        int m = int(d.month());
-        int y = d.year();
+        int year = d.year();
 
+        // If d is in last 6 days of December it may belong to the next year.
+        // Compare d's day_of_week to the distance from the earliest possible
+        // first day of year (where Jan 1 is a Saturday).
         
-        if (m > 2) {
-            m -= 2;                 // adjust for month 1 = Mar
-        }
-        else {
-            m += 10;
-            --y;                    // Jan & Feb belong to previous year
+        const int earliest_first_day = 26;
+        if (d.month() == Month::dec && d.day() >= earliest_first_day) {
+            if (int(day_of_week(d)) <= (d.day() - earliest_first_day))
+                ++year;
         }
 
-        int c = int(y / 100);       // the century portion
-        y %= 100;                   // y becomes just the 2 digit year
+        Date d1 {year, Month::jan, 1};
 
-        return Day(
-            (k + int(2.6*m - 0.2) - 2*c + y + int(y/4) + int(c/4)) % 7
-        );
+        while (day_of_week(d1) != Day::sun)
+            d1.add_day(-1);
+        
+        return d1;
     }
 
-    /*
-    Date next_Sunday(const Date& d)
+    // Ex 11
+    int week_of_year(const Date& d)
     {
-        // ...
+        Date iter{day_one(d)};
+
+        if (iter == d)
+            return 1;
+
+        int week = 0;
+        while (iter < d) {
+            iter.add_day(7);
+            ++week;
+        }
+
+        return week;
     }
 
-    Date next_weekday(const Date& d)
+    Date next_sunday(Date d)        // pass by value to operate directly on
     {
-        // ...
+        while (day_of_week(d) != Day::sun)
+            d.add_day(1);
+
+        return d;
     }
-    */
+
+    // Ex 11 - next_workday() alternative
+    Date next_weekday(Date d)
+    {
+        Day weekday;
+
+        do {
+            d.add_day(1);
+            weekday = day_of_week(d);
+        } while (weekday == Day::sat || weekday == Day::sun);
+
+        return d;
+    }
 }   // Chrono

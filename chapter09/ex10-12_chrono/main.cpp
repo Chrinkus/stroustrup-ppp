@@ -53,4 +53,30 @@ int main()
     cout << d5 << " <-- Should be January 29, 2020\n";
     d5.add_month(-5);
     cout << d5 << " <-- Should be August 29, 2019\n";
+
+    // add_day negatives
+    Date d6{2018, Month::dec, 25};
+    d6.add_day(-1);
+    cout << d6 << " <-- Should be (2018, December, 24)\n";
+    d6.add_day(-10);
+    cout << d6 << " <-- Should be (2018, December, 14)\n";
+    d6.add_day(-20);
+    cout << d6 << " <-- Should be (2018, November, 24)\n";
+
+    d4.add_day(-15000);
+    cout << d4 << " <-- Should be (1979, February, 27)\n";
+
+    // day_one
+    Date d7 {2018, Month::jun, 25};
+    cout << day_one(d7) << " <-- Should be (2017, December, 31)\n";
+    Date d8 {2015, Month::dec, 30};
+    cout << day_one(d8) << " <-- Should be (2015, December, 27)\n";
+
+    // week_of_year
+    cout << week_of_year(d8) << " <-- Should be 1\n";
+    cout << week_of_year(d7) << " <-- Should be 26\n";
+
+    // next_sunday
+    cout << next_sunday(d7) << " <-- Should be (2018, July, 1)\n";
+    cout << next_weekday(d7) << " <-- Should be (2018, June, 26)\n";
 }
