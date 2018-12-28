@@ -1,5 +1,5 @@
 # stroustrup-ppp
-Chapter work from Bjarne Stroustrup's [Programming Principles and Practice Using C++](https://www.amazon.com/Programming-Principles-Practice-Using-2nd) textbook.
+Chapter work from Bjarne Stroustrup's [Programming Principles and Practice Using C++](https://www.amazon.com/Programming-Principles-Practice-Using-2nd/dp/0321992784/) textbook.
 
 ![cover of text](https://images-na.ssl-images-amazon.com/images/I/51j679vpDGL._SX406_BO1,204,203,200_.jpg)
 
