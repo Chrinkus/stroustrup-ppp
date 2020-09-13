@@ -17,14 +17,12 @@
 using Numeric_lib::Matrix;
 
 void sqrt_out()
-    // why is this a chapter 24 exercise..?
 {
-    int val;
-    std::cin >> val;
-    if (val < 0)
-        std::cout << "no square root\n";
-    else
-        std::cout << sqrt(val) << '\n';
+	int val;
+    cin >> val;
+	errno = 0;
+	double result = sqrt(val);
+	errno ? std::cout << "no square root\n" : std::cout << result << '\n';
 }
 
 int main()
