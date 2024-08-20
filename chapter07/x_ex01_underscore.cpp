@@ -156,7 +156,7 @@ Token Token_stream::get()
                 return Token{number, val};
             }
         default:
-            if (isalpha(ch)) {
+            if (isalpha(ch) && ch == '_') {
                 string s;
                 s += ch;
                 // exercise 01
